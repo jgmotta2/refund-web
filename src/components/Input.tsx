@@ -1,5 +1,5 @@
 type Props = React.ComponentProps<"input"> & {
-  legend: string;
+  legend?: string;
 };
 
 export default function Input({ legend, ...rest }: Props) {
