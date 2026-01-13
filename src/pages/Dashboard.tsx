@@ -1,9 +1,20 @@
 import { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import searchSvg from "../assets/search.svg";
+import RefundItem, { type RefundItemProps } from "../components/RefundItem";
+import { CATEGORIES } from "../utils/categories";
 
 export default function Dashboard() {
   const [name, setName] = useState("");
+
+  const EXAMPLE_REFUNDITEM: RefundItemProps = {
+    id: "12",
+    amount: 34.9,
+    name: "João Gabriel Motta",
+    category: "Transporte",
+    categoryImg: CATEGORIES.transport.icon,
+  };
 
   function fetchRefunds(e: React.FormEvent) {
     e.preventDefault();
@@ -23,8 +34,21 @@ export default function Dashboard() {
           onChange={(e) => setName(e.target.value)}
         />
 
-        <Button>AU</Button>
+        <Button type="submit" variant="icon">
+          <img src={searchSvg} alt="icone de pesquisa" />
+        </Button>
       </form>
+
+      <div className="flex flex-col gap-5 mt-6 max-h-85.5 overflow-y-scroll">
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+        <RefundItem data={EXAMPLE_REFUNDITEM} />
+      </div>
     </div>
   );
 }
