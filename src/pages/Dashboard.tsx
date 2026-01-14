@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import searchSvg from "../assets/search.svg";
 import RefundItem, { type RefundItemProps } from "../components/RefundItem";
 import { CATEGORIES } from "../utils/categories";
+import Pagination from "../components/Pagination";
 
 export default function Dashboard() {
   const [name, setName] = useState("");
@@ -48,6 +49,10 @@ export default function Dashboard() {
         <RefundItem data={EXAMPLE_REFUNDITEM} />
         <RefundItem data={EXAMPLE_REFUNDITEM} />
         <RefundItem data={EXAMPLE_REFUNDITEM} />
+      </div>
+
+      <div className="flex flex-col mt-6">
+        <Pagination current={1} total={10} />
       </div>
     </div>
   );
