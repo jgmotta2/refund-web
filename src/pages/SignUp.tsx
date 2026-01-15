@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
-export default function SignIn() {
+export default function SignUp() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,11 +15,17 @@ export default function SignIn() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="w-full flex flex-col gap-4">
-      <Input required legend="Nome" onChange={(e) => setNome(e.target.value)} />
+    <form onSubmit={onSubmit} className="w-full flex flex-col gap-4 p-6 ">
+      <Input
+        required
+        placeholder="Seu nome"
+        legend="Nome"
+        onChange={(e) => setNome(e.target.value)}
+      />
 
       <Input
         required
+        placeholder="seu@email.com"
         legend="e-mail"
         type="email"
         onChange={(e) => setEmail(e.target.value)}
@@ -27,6 +33,7 @@ export default function SignIn() {
 
       <Input
         required
+        placeholder="123456"
         legend="Senha"
         type="password"
         onChange={(e) => setPassword(e.target.value)}
@@ -34,6 +41,7 @@ export default function SignIn() {
 
       <Input
         required
+        placeholder="123456"
         legend="Confirme sua senha"
         type="password"
         onChange={(e) => setPasswordConfirm(e.target.value)}

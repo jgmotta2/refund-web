@@ -5,12 +5,18 @@ import Button from "./Button";
 type Props = {
   current: number;
   total: number;
+  onNext: () => void;
+  onPrevious: () => void;
 };
 
 export default function Pagination(props: Props) {
   return (
     <div className="flex items-center justify-center gap-4">
-      <Button variant="iconSmall">
+      <Button
+        variant="iconSmall"
+        onClick={props.onPrevious}
+        disabled={props.current === 1}
+      >
         <img src={leftSvg} alt="icone seta esquerda" />
       </Button>
 
@@ -18,7 +24,11 @@ export default function Pagination(props: Props) {
         {props.current}/{props.total}
       </span>
 
-      <Button variant="iconSmall">
+      <Button
+        variant="iconSmall"
+        onClick={props.onNext}
+        disabled={props.current === props.total}
+      >
         <img src={rightSvg} alt="icone seta direita" />
       </Button>
     </div>

@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
-import SignIn from "../pages/SignUp";
+import SignIn from "../pages/SignIn";
 import AuthLayout from "../components/AuthLayout";
-import SignUp from "../pages/SignIn";
+import SignUp from "../pages/SignUp";
 import NotFound from "../pages/NotFound";
 
 export default function AuthRoutes() {
