@@ -1,6 +1,15 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import { z, ZodError } from "zod";
+
+const signUpSchema = z.object({
+  name: z.string().trim().min(1, { message: "Informe o seu nome!" }),
+  email: z.string().email({ message: "E-mail inválido!" }),
+  password: z
+    .string()
+    .min(6, { message: "Senha deve ter pelo menos 6 dígitos!" }),
+});
 
 export default function SignUp() {
   const [nome, setNome] = useState("");
@@ -15,7 +24,7 @@ export default function SignUp() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="w-full flex flex-col gap-4 p-6 ">
+    <form onSubmit={onSubmit} className="w-full flex flex-col gap-4">
       <Input
         required
         placeholder="Seu nome"
