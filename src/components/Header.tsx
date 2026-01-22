@@ -1,19 +1,23 @@
 import logo from "../assets/logo.svg";
 import logout from "../assets/logout.svg";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
+  const auth = useAuth();
+
   return (
     <header className="w-full flex justify-between px-23 py-10">
       <img src={logo} alt="logo" />
 
       <div className="flex gap-3 items-center">
         <span className="text-sm font-semibold text-gray-200">
-          Olá, Rodrigo
+          Olá, {auth.session?.user.name}
         </span>
         <img
           src={logout}
           alt="icone de sair"
           className="cursor-pointer hover:opacity-70 transition ease-linear"
+          onClick={() => auth.remove()}
         />
       </div>
     </header>

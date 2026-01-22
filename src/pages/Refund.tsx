@@ -6,6 +6,15 @@ import Upload from "../components/Upload";
 import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router";
 import fileSvg from "../assets/file.svg";
+import { number, string, z, ZodError } from "zod";
+
+const refundSchema = z.object({
+  name: z.string().trim().min(1, { message: "Informe o nome da solicitação!" }),
+  category: z.string().min(1, { message: "Informe uma categoria!" }),
+  amount: z.coerce
+    .number({ message: "Informe um número válido!" })
+    .positive({ message: "Informe um valor superior a 0!" }),
+});
 
 export default function Refund() {
   const [name, setName] = useState("");
