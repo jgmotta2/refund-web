@@ -1,4 +1,5 @@
 import { createContext, use, useEffect, useState, type ReactNode } from "react";
+import { api } from "../services/api";
 
 type AuthContext = {
   session: null | UserAPIresponse;
@@ -23,6 +24,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, data.token);
 
+    api.defaults.headers.common["Authorization"] = `Bearer: ${data.token}`;
+
     setSession(data);
   }
 
@@ -44,6 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: JSON.parse(user),
       });
     }
+
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     setIsLoading(false);
   }

@@ -7,6 +7,8 @@ import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router";
 import fileSvg from "../assets/file.svg";
 import { number, string, z, ZodError } from "zod";
+import { AxiosError } from "axios";
+import { api } from "../services/api";
 
 const refundSchema = z.object({
   name: z.string().trim().min(1, { message: "Informe o nome da solicitação!" }),
@@ -20,21 +22,56 @@ export default function Refund() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [filename, setFilename] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
 
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (params.id) {
       return navigate(-1);
     }
 
-    console.log("foi");
-    navigate("/confirm", { state: { fromSubmit: true } });
+    try {
+      setIsLoading(true);
+
+      if (!file) {
+        return alert("Selecione um arquivo!");
+      }
+
+      const fileUploadForm = new FormData();
+      fileUploadForm.append("file", file);
+
+      const response = await api.post("/uploads", fileUploadForm);
+
+      const data = refundSchema.parse({
+        name,
+        category,
+        amount: amount.replace(",", "."),
+      });
+
+      await api.post("/refunds", {
+        ...data,
+        filename: response.data.filename,
+      });
+
+      navigate("/confirm", { state: { fromSubmit: true } });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
+      }
+
+      alert("Não foi possível realizar a solicitação!");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -93,10 +130,10 @@ export default function Refund() {
         </a>
       ) : (
         <Upload
-          filename={filename && filename?.name}
+          filename={file && file?.name}
           legend="Comprovante"
           required
-          onChange={(e) => e.target.files && setFilename(e.target.files[0])}
+          onChange={(e) => e.target.files && setFile(e.target.files[0])}
           disabled={!!params.id}
         />
       )}
