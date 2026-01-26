@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../components/Input";
 import Select from "../components/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
@@ -6,9 +6,11 @@ import Upload from "../components/Upload";
 import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router";
 import fileSvg from "../assets/file.svg";
-import { number, string, z, ZodError } from "zod";
+import { z, ZodError } from "zod";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
+import { FormatCurrency } from "../utils/formatCurrency";
+import { da } from "zod/v4/locales";
 
 const refundSchema = z.object({
   name: z.string().trim().min(1, { message: "Informe o nome da solicitação!" }),
@@ -24,6 +26,7 @@ export default function Refund() {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
+  const [fileURL, setFileURL] = useState<string | null>();
 
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
@@ -74,6 +77,21 @@ export default function Refund() {
     }
   }
 
+  async function fetchRefunds(id: string) {
+    const { data } = await api.get<RefundAPIresponse>(`/refunds/${id}`);
+
+    setName(data.name);
+    setCategory(data.category);
+    setAmount(FormatCurrency(data.amount));
+    setFileURL(data.filename);
+  }
+
+  useEffect(() => {
+    if (params.id) {
+      fetchRefunds(params.id);
+    }
+  }, [params.id]);
+
   return (
     <form
       onSubmit={onSubmit}
@@ -120,9 +138,9 @@ export default function Refund() {
         />
       </div>
 
-      {params.id ? (
+      {params.id && fileURL ? (
         <a
-          href="https://www.youtube.com/"
+          href={`http://localhost:3333/uploads/${fileURL}`}
           target="_blank"
           className="flex items-center justify-center gap-2 text-sm text-green-100 font-semibold my-6 hover:opacity-75 transition ease-linear"
         >
